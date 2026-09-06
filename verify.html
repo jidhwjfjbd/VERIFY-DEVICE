@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التحقق من الجهاز</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://openfpcdn.io/fingerprintjs/v3/esm.min.js"></script>
+    <style>
+        body { font-family: system-ui, sans-serif; text-align: center; padding: 40px 20px; background: #121212; color: #ffffff; }
+        .card { background: #1e1e1e; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .btn { background: #0088cc; color: white; border: none; padding: 14px 28px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; width: 100%; }
+        .status { margin-top: 15px; color: #aaaaaa; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🔒 التحقق من أمان الجهاز</h2>
+        <p>يرجى الضغط على الزر أدناه لتأكيد حماية حسابك ومنع الحسابات الوهمية.</p>
+        <button class="btn" onclick="verifyDevice()" id="btn">تأكيد الجهاز الآن 🚀</button>
+        <div class="status" id="status"></div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        async function verifyDevice() {
+            const btn = document.getElementById('btn');
+            const status = document.getElementById('status');
+            
+            btn.disabled = true;
+            btn.innerText = "جاري التحقق...";
+            status.innerText = "جاري فحص بصمة الجهاز...";
+
+            try {
+                const fpPromise = FingerprintJS.load();
+                const fp = await fpPromise;
+                const result = await fp.get();
+                const deviceId = result.visitorId;
+
+                tg.sendData(JSON.stringify({
+                    action: "verify_device",
+                    device_id: deviceId
+                }));
+
+                status.innerText = "✅ تم التوثيق بنجاح! جاري العودة للبوت...";
+                setTimeout(() => tg.close(), 1000);
+            } catch (error) {
+                btn.disabled = false;
+                btn.innerText = "إعادة المحاولة";
+                status.innerText = "❌ حدث خطأ أثناء التحقق، حاول مرة أخرى.";
+            }
+        }
+    </script>
+</body>
+</html>
