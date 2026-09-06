@@ -1,57 +1,93 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التحقق من الجهاز</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://openfpcdn.io/fingerprintjs/v3/esm.min.js"></script>
-    <style>
-        body { font-family: system-ui, sans-serif; text-align: center; padding: 40px 20px; background: #121212; color: #ffffff; }
-        .card { background: #1e1e1e; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .btn { background: #0088cc; color: white; border: none; padding: 14px 28px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; width: 100%; }
-        .status { margin-top: 15px; color: #aaaaaa; font-size: 14px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>التحقق من أمان الجهاز</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: #1e1e1e;
+      padding: 24px;
+      border-radius: 16px;
+      text-align: center;
+      width: 85%;
+      max-width: 350px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    button {
+      background-color: #0088cc;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+    }
+    .status { margin-top: 15px; font-size: 14px; }
+    .error { color: #ff5252; }
+    .success { color: #4caf50; }
+  </style>
 </head>
 <body>
-    <div class="card">
-        <h2>🔒 التحقق من أمان الجهاز</h2>
-        <p>يرجى الضغط على الزر أدناه لتأكيد حماية حسابك ومنع الحسابات الوهمية.</p>
-        <button class="btn" onclick="verifyDevice()" id="btn">تأكيد الجهاز الآن 🚀</button>
-        <div class="status" id="status"></div>
-    </div>
+  <div class="card">
+    <h2>🔒 التحقق من أمان الجهاز</h2>
+    <p>يرجى الضغط على الزر أدناه لتأكيد حماية حسابك ومنع الحسابات الوهمية.</p>
+    <button id="verify-btn" onclick="verifyDevice()">تأكيد الجهاز الآن</button>
+    <div id="status" class="status"></div>
+  </div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+  <script>
+    const tg = window.Telegram ? window.Telegram.WebApp : null;
+    if (tg) tg.ready();
 
-        async function verifyDevice() {
-            const btn = document.getElementById('btn');
-            const status = document.getElementById('status');
-            
-            btn.disabled = true;
-            btn.innerText = "جاري التحقق...";
-            status.innerText = "جاري فحص بصمة الجهاز...";
+    async function verifyDevice() {
+      const statusDiv = document.getElementById('status');
+      const btn = document.getElementById('verify-btn');
+      statusDiv.className = 'status';
+      statusDiv.innerText = 'جاري التحقق...';
+      btn.disabled = true;
 
-            try {
-                const fpPromise = FingerprintJS.load();
-                const fp = await fpPromise;
-                const result = await fp.get();
-                const deviceId = result.visitorId;
+      try {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        const visitorId = result.visitorId;
 
-                tg.sendData(JSON.stringify({
-                    action: "verify_device",
-                    device_id: deviceId
-                }));
+        const payload = JSON.stringify({
+          action: "verify_device",
+          device_id: visitorId
+        });
 
-                status.innerText = "✅ تم التوثيق بنجاح! جاري العودة للبوت...";
-                setTimeout(() => tg.close(), 1000);
-            } catch (error) {
-                btn.disabled = false;
-                btn.innerText = "إعادة المحاولة";
-                status.innerText = "❌ حدث خطأ أثناء التحقق، حاول مرة أخرى.";
-            }
+        if (tg && tg.sendData) {
+          tg.sendData(payload);
+          statusDiv.className = 'status success';
+          statusDiv.innerText = '✅ تم التوثيق بنجاح! جاري الإغلاق...';
+          setTimeout(() => tg.close(), 1000);
+        } else {
+          statusDiv.className = 'status error';
+          statusDiv.innerText = '⚠️ يرجى فتح هذه الصفحة من داخل تطبيق التلجرام فقط.';
+          btn.disabled = false;
         }
-    </script>
+      } catch (err) {
+        statusDiv.className = 'status error';
+        statusDiv.innerText = '❌ حدث خطأ أثناء التحقق، حاول مرة أخرى.';
+        btn.disabled = false;
+      }
+    }
+  </script>
 </body>
 </html>
