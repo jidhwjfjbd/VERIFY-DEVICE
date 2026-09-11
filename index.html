@@ -1,272 +1,93 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZORRO - توثيق أمان الجهاز</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      background-color: #0d1117;
-      color: #c9d1d9;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-      overflow: hidden;
-    }
-    
-    .card {
-      background: linear-gradient(145deg, #161b22, #0d1117);
-      padding: 30px 25px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 15px rgba(46, 166, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      max-width: 360px;
-      width: 100%;
-      position: relative;
-    }
-
-    .badge {
-      display: inline-block;
-      background: rgba(46, 166, 255, 0.1);
-      color: #2ea6ff;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-      border: 1px solid rgba(46, 166, 255, 0.3);
-    }
-
-    h2 {
-      margin: 0 0 8px 0;
-      color: #ffffff;
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    }
-
-    p {
-      color: #8b949e;
-      font-size: 13.5px;
-      margin-bottom: 25px;
-      line-height: 1.6;
-    }
-
-    /* زر التوثيق الدائر */
-    .btn {
-      background: linear-gradient(135deg, #1f6beb, #2ea6ff);
-      color: #ffffff;
-      border: none;
-      padding: 14px 20px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 4px 15px rgba(46, 166, 255, 0.3);
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(46, 166, 255, 0.4);
-    }
-
-    .btn:disabled {
-      background: #21262d;
-      color: #8b949e;
-      box-shadow: none;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    /* مؤشر التحميل الدائر (Spinner) */
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: #ffffff;
-      animation: spin 0.8s linear infinite;
-      display: none;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* منطقة تحليل البيانات الهكر */
-    #analysisBox {
-      display: none;
-      margin-top: 20px;
-      background: #090d11;
-      border-radius: 10px;
-      padding: 15px;
-      border: 1px solid #21262d;
-      text-align: right;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 12px;
-    }
-
-    .log-line {
-      margin: 4px 0;
-      color: #8b949e;
-      opacity: 0;
-      animation: fadeIn 0.4s forwards;
-    }
-
-    .log-success { color: #3fb950; font-weight: bold; }
-    .log-info { color: #2ea6ff; }
-
-    /* شريط التقدم */
-    .progress-bar-container {
-      width: 100%;
-      background-color: #21262d;
-      border-radius: 6px;
-      height: 6px;
-      margin-top: 10px;
-      overflow: hidden;
-      display: none;
-    }
-
-    .progress-bar {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #2ea6ff, #3fb950);
-      transition: width 0.4s ease;
-    }
-
-    /* النتيجة النهائية */
-    #resultBadge {
-      display: none;
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes fadeIn { to { opacity: 1; } }
-    @keyframes popIn { 
-      0% { transform: scale(0.5); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد أمان الجهاز</title>
+    <!-- تضمين مكتبة تليجرام الـ Web App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0f172a;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .card {
+            background-color: #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            max-width: 90%;
+            width: 350px;
+        }
+        h2 {
+            margin-bottom: 15px;
+            color: #38bdf8;
+        }
+        p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        button {
+            background-color: #0ea5e9;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #0284c7;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="card">
-    <div class="badge">ZORRO SECURITY SYSTEM</div>
-    <h2>ZORRO</h2>
-    <p>انقر أدناه لبدء فحص بصمة الجهاز الحيوية والتحقق من الأمان.</p>
-
-    <button id="verifyBtn" class="btn" onclick="startVerification()">
-      <div id="spinner" class="spinner"></div>
-      <span id="btnText">🛡️ تأكيد أمان الجهاز</span>
-    </button>
-
-    <div id="progressContainer" class="progress-bar-container">
-      <div id="progressBar" class="progress-bar"></div>
+    <div class="card">
+        <h2>حماية البوت</h2>
+        <p>انقر على الزر أدناه لتأكيد أمان جهازك والمتابعة إلى البوت لمرة واحدة فقط.</p>
+        <button onclick="verifyAndClose()">تأكيد الأمان الآن</button>
     </div>
 
-    <div id="analysisBox">
-      <div id="log1" class="log-line">🔍 فحص الأجهزة المتصلة...</div>
-      <div id="log2" class="log-line">🧬 استخراج بصمة FingerprintJS...</div>
-      <div id="log3" class="log-line">⚡ المطابقة مع قاعدة البيانات...</div>
-    </div>
+    <script>
+        // تهيئة الـ Web App
+        const tg = window.Telegram.WebApp;
+        tg.expand();
 
-    <div id="resultBadge"></div>
-  </div>
+        function verifyAndClose() {
+            // توليد معرف فريد للجهاز أو تخزينه محلياً لثبات البصمة
+            let deviceId = localStorage.getItem('bot_device_id');
+            if (!deviceId) {
+                deviceId = 'dev_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+                localStorage.setItem('bot_device_id', deviceId);
+            }
 
-  <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
+            // تجهيز البيانات وإرسالها للبوت
+            const payload = JSON.stringify({
+                action: "verify_device",
+                device_id: deviceId
+            });
 
-    async function startVerification() {
-      const btn = document.getElementById('verifyBtn');
-      const btnText = document.getElementById('btnText');
-      const spinner = document.getElementById('spinner');
-      const progressContainer = document.getElementById('progressContainer');
-      const progressBar = document.getElementById('progressBar');
-      const analysisBox = document.getElementById('analysisBox');
-      const resultBadge = document.getElementById('resultBadge');
-
-      // 1. تفعيل وضع المعالجة والزر الدوار
-      btn.disabled = true;
-      spinner.style.display = "block";
-      btnText.innerText = "جاري التحليل...";
-      progressContainer.style.display = "block";
-      analysisBox.style.display = "block";
-
-      // 2. محاكاة خطوات الفحص المتتابعة بالثواني
-      setTimeout(() => {
-        document.getElementById('log1').style.opacity = '1';
-        progressBar.style.width = '30%';
-      }, 400);
-
-      try {
-        const fp = await FingerprintJS.load();
-        const result = await fp.get();
-        const visitorId = result.visitorId;
-
-        setTimeout(() => {
-          document.getElementById('log2').style.opacity = '1';
-          document.getElementById('log2').classList.add('log-info');
-          document.getElementById('log2').innerText += ` [${visitorId.substring(0, 8)}...]`;
-          progressBar.style.width = '70%';
-        }, 1200);
-
-        setTimeout(() => {
-          document.getElementById('log3').style.opacity = '1';
-          progressBar.style.width = '100%';
-        }, 2000);
-
-        // 3. النتيجة النهائية الموافقة ✅
-        setTimeout(() => {
-          spinner.style.display = "none";
-          btn.style.display = "none";
-          
-          resultBadge.style.display = "block";
-          resultBadge.style.color = "#3fb950";
-          resultBadge.innerHTML = "✅ تم قبول الجهاز بنجاح!";
-
-          // إرسال البيانات للتلجرام وإغلاق النافذة تلقائياً
-          tg.sendData(JSON.stringify({
-            action: "verify_device",
-            device_id: visitorId
-          }));
-
-          setTimeout(() => { tg.close(); }, 1000);
-        }, 2800);
-
-      } catch (error) {
-        // حالة الرفض أو الخطأ ❌
-        setTimeout(() => {
-          spinner.style.display = "none";
-          btn.disabled = false;
-          btnText.innerText = "إعادة المحاولة 🔄";
-          
-          resultBadge.style.display = "block";
-          resultBadge.style.color = "#f85149";
-          resultBadge.innerHTML = "❌ فشل التوثيق، حاول مجدداً.";
-        }, 2000);
-      }
-    }
-  </script>
+            if (tg && tg.sendData) {
+                tg.sendData(payload);
+                // إغلاق النافذة فوراً لمنع التكرار
+                tg.close();
+            } else {
+                alert("يرجى فتح هذه الصفحة من داخل تطبيق تليجرام حصراً.");
+            }
+        }
+    </script>
 </body>
 </html>
